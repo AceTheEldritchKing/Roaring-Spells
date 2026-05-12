@@ -1,0 +1,13 @@
+{
+  "itemGroup.roaring_knight_iss": "Example Mod Tab",
+  "block.roaring_knight_iss.example_block": "Example Block",
+  "item.roaring_knight_iss.example_item": "Example Item",
+
+  "roaring_knight_iss.configuration.title": "The Roaring: Spellbooks Configs",
+  "roaring_knight_iss.configuration.section.roaring_knight_iss.common.toml": "The Roaring: Spellbooks Configs",
+  "roaring_knight_iss.configuration.section.roaring_knight_iss.common.toml.title": "The Roaring: Spellbooks Configs",
+  "roaring_knight_iss.configuration.items": "Item List",
+  "roaring_knight_iss.configuration.logDirtBlock": "Log Dirt Block",
+  "roaring_knight_iss.configuration.magicNumberIntroduction": "Magic Number Text",
+  "roaring_knight_iss.configuration.magicNumber": "Magic Number"
+}
