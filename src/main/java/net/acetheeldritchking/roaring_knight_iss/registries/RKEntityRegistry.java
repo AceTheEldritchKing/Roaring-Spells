@@ -1,7 +1,7 @@
 package net.acetheeldritchking.roaring_knight_iss.registries;
 
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
-import net.acetheeldritchking.roaring_knight_iss.entity.bosses.black_executioner.BlackExecutionerBoss;
+import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -15,11 +15,11 @@ public class RKEntityRegistry {
             DeferredRegister.create(Registries.ENTITY_TYPE, TheRoaringSpellbooks.MOD_ID);
 
     // Black Executioner Boss
-    public static final DeferredHolder<EntityType<?>, EntityType<BlackExecutionerBoss>> BLACK_EXECUTIONER_BOSS =
-            ENTITIES.register("black_executioner_shade", () -> EntityType.Builder.<BlackExecutionerBoss>of(BlackExecutionerBoss::new, MobCategory.MONSTER)
+    public static final DeferredHolder<EntityType<?>, EntityType<RoaringHarbingerBoss>> BLACK_EXECUTIONER_BOSS =
+            ENTITIES.register("harbinger_of_roaring", () -> EntityType.Builder.<RoaringHarbingerBoss>of(RoaringHarbingerBoss::new, MobCategory.MONSTER)
                     .sized(1.6f, 4.8f)
                     .clientTrackingRange(64)
-                    .build(ResourceLocation.fromNamespaceAndPath(TheRoaringSpellbooks.MOD_ID, "black_executioner_shade").toString())
+                    .build(ResourceLocation.fromNamespaceAndPath(TheRoaringSpellbooks.MOD_ID, "harbinger_of_roaring").toString())
             );
 
     public static void register(IEventBus eventBus)

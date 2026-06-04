@@ -1,4 +1,4 @@
-package net.acetheeldritchking.roaring_knight_iss.entity.bosses.black_executioner;
+package net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger;
 
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
@@ -8,21 +8,18 @@ import io.redspace.ironsspellbooks.entity.mobs.goals.MomentHurtByTargetGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.SpellBarrageGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackAnimationData;
-import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackKeyframe;
 import io.redspace.ironsspellbooks.entity.mobs.keeper.KeeperEntity;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.ExtendedServerBossEvent;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.FireBossEntity;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.NotIdioticNavigation;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.priest.PriestEntity;
 import io.redspace.ironsspellbooks.network.EntityEventPacket;
-import net.acetheeldritchking.aces_spell_utils.entity.mobs.GenericBossEntity;
 import net.acetheeldritchking.aces_spell_utils.entity.mobs.GenericUniqueBossEntity;
 import net.acetheeldritchking.aces_spell_utils.entity.mobs.goals.WizardSpellComboGoal;
 import net.acetheeldritchking.aces_spell_utils.registries.ASAttributeRegistry;
-import net.acetheeldritchking.aces_spell_utils.utils.boss_music.BossMusicManager;
 import net.acetheeldritchking.aces_spell_utils.utils.boss_music.UniqueBossMusicManager;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
-import net.acetheeldritchking.roaring_knight_iss.entity.bosses.black_executioner.goals.BlackExecutionerAttackGoal;
+import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.RoaringHarbingerAttackGoal;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKSoundEvents;
 import net.minecraft.ChatFormatting;
@@ -54,8 +51,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class BlackExecutionerBoss extends GenericUniqueBossEntity {
-    public BlackExecutionerBoss(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
+public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
+    public RoaringHarbingerBoss(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         setPersistenceRequired();
         xpReward = 60;
@@ -64,7 +61,7 @@ public class BlackExecutionerBoss extends GenericUniqueBossEntity {
         createBossEvent();
     }
 
-    public BlackExecutionerBoss(Level level)
+    public RoaringHarbingerBoss(Level level)
     {
         this(RKEntityRegistry.BLACK_EXECUTIONER_BOSS.get(), level);
         setPersistenceRequired();
@@ -75,10 +72,10 @@ public class BlackExecutionerBoss extends GenericUniqueBossEntity {
 
     // These are used for doing boss bars, setting up the phase serializer for NBT, and stopping and starting music
     private ExtendedServerBossEvent bossEvent;
-    private final static EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(BlackExecutionerBoss.class, EntityDataSerializers.INT);
-    private final static EntityDataAccessor<Integer> RAGE_METER = SynchedEntityData.defineId(BlackExecutionerBoss.class, EntityDataSerializers.INT);
-    private final static EntityDataAccessor<Boolean> ENRAGED = SynchedEntityData.defineId(BlackExecutionerBoss.class, EntityDataSerializers.BOOLEAN);
-    private final static EntityDataAccessor<Boolean> TORMENT_MODE = SynchedEntityData.defineId(BlackExecutionerBoss.class, EntityDataSerializers.BOOLEAN);
+    private final static EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(RoaringHarbingerBoss.class, EntityDataSerializers.INT);
+    private final static EntityDataAccessor<Integer> RAGE_METER = SynchedEntityData.defineId(RoaringHarbingerBoss.class, EntityDataSerializers.INT);
+    private final static EntityDataAccessor<Boolean> ENRAGED = SynchedEntityData.defineId(RoaringHarbingerBoss.class, EntityDataSerializers.BOOLEAN);
+    private final static EntityDataAccessor<Boolean> TORMENT_MODE = SynchedEntityData.defineId(RoaringHarbingerBoss.class, EntityDataSerializers.BOOLEAN);
     public static final byte CLIENT_STOP_TRACKING = 0;
     public static final byte CLIENT_START_TRACKING = 1;
     public static final byte PROC_PARRY = 2;
@@ -185,14 +182,14 @@ public class BlackExecutionerBoss extends GenericUniqueBossEntity {
     public void startSeenByPlayer(ServerPlayer serverPlayer) {
         super.startSeenByPlayer(serverPlayer);
         this.bossEvent.addPlayer(serverPlayer);
-        PacketDistributor.sendToPlayer(serverPlayer, new EntityEventPacket<BlackExecutionerBoss>(this, CLIENT_START_TRACKING));
+        PacketDistributor.sendToPlayer(serverPlayer, new EntityEventPacket<RoaringHarbingerBoss>(this, CLIENT_START_TRACKING));
     }
 
     @Override
     public void stopSeenByPlayer(ServerPlayer serverPlayer) {
         super.stopSeenByPlayer(serverPlayer);
         this.bossEvent.removePlayer(serverPlayer);
-        PacketDistributor.sendToPlayer(serverPlayer, new EntityEventPacket<BlackExecutionerBoss>(this, CLIENT_STOP_TRACKING));
+        PacketDistributor.sendToPlayer(serverPlayer, new EntityEventPacket<RoaringHarbingerBoss>(this, CLIENT_STOP_TRACKING));
     }
 
     // These are for movement and looking controls for smoother movement (from Iron himself)
@@ -252,7 +249,7 @@ public class BlackExecutionerBoss extends GenericUniqueBossEntity {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, DeadKingBoss.class, true));
     }
 
-    BlackExecutionerAttackGoal attackGoal = new BlackExecutionerAttackGoal(this, 1.5F, 25, 40);
+    RoaringHarbingerAttackGoal attackGoal = new RoaringHarbingerAttackGoal(this, 1.5F, 25, 40);
 
     // First Phase
     private void firstPhaseGoals()
@@ -265,7 +262,11 @@ public class BlackExecutionerBoss extends GenericUniqueBossEntity {
         this.goalSelector.addGoal(2, new SpellBarrageGoal(this, SpellRegistry.ELDRITCH_BLAST_SPELL.get(), 1, 3, 80, 150, 3));
         this.goalSelector.addGoal(4, new SpellBarrageGoal(this, SpellRegistry.TELEPORT_SPELL.get(), 1, 3, 80, 150, 3));
 
-        this.attackGoal = (BlackExecutionerAttackGoal) new BlackExecutionerAttackGoal(this, 1.5F, 25, 40)
+        this.attackGoal = (RoaringHarbingerAttackGoal) new RoaringHarbingerAttackGoal(this, 1.5F, 25, 40)
+                .setMoveset(List.of(
+                        new AttackAnimationData(42, "slash_1", 22),
+                        new AttackAnimationData(51, "slash_2", 26)
+                ))
                 .setComboChance(0.8F)
                 .setMeleeAttackInverval(50, 80)
                 .setMeleeMovespeedModifier(1.5F)
