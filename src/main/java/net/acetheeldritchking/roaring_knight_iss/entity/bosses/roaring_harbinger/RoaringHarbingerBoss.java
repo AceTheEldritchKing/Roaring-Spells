@@ -241,10 +241,8 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
     protected void registerGoals() {
         firstPhaseGoals();
         this.targetSelector.addGoal(1, new MomentHurtByTargetGoal(this));
-        // She HATE these guys
+
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, KeeperEntity.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PriestEntity.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, FireBossEntity.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, DeadKingBoss.class, true));
     }
@@ -371,11 +369,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         super.addAdditionalSaveData(pCompound);
         // Phases
         pCompound.putInt("phase", getPhase());
-        // Rage
-        //pCompound.putInt("rage_meter", getRageMeter());
-        //pCompound.putBoolean("is_enraged", getEnraged());
-        // Torment Mode
-        //pCompound.putBoolean("is_torment_mode", getTormentMode());
 
         if (rageTime > 0)
         {
@@ -399,10 +392,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         /*if (isPhase(GenericBossEntity.Phase.SecondPhase))
         {
             secondPhaseGoals();
-        }
-        if (isPhase(GenericBossEntity.Phase.FourthPhase))
-        {
-            finalPhaseGoals();
         }*/
         // Loot
         if (deathLoot != null)
@@ -422,25 +411,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         {
             this.bossEvent.setName(this.getDisplayName());
         }
-
-        // Rage
-        /*setRageMeter(pCompound.getInt("rage_meter"));
-        setEnraged(pCompound.getBoolean("is_enraged"));
-
-        int rageTime = pCompound.getInt("rage_timer");
-        if (rageTime > 0)
-        {
-            this.rageTime = rageTime;
-        }
-
-        int rageCooldown = pCompound.getInt("rage_cooldown");
-        if (rageCooldown > 0)
-        {
-            this.rageCooldown = rageCooldown;
-        }
-
-        // Torment Mode
-        setTormentMode(pCompound.getBoolean("is_torment_mode"));*/
     }
 
     @Override

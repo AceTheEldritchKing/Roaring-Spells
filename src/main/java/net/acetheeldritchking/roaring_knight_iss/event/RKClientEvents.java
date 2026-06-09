@@ -2,6 +2,7 @@ package net.acetheeldritchking.roaring_knight_iss.event;
 
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.entity.bosses.black_executioner.BlackExecutionerRenderer;
+import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_sabre_projectile.DarkSabreProjectileRenderer;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.utils.RKRarities;
 import net.acetheeldritchking.roaring_knight_iss.utils.UniqueRarityColorHelper;
@@ -21,6 +22,7 @@ public class RKClientEvents {
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event)
     {
         event.registerEntityRenderer(RKEntityRegistry.BLACK_EXECUTIONER_BOSS.get(), BlackExecutionerRenderer::new);
+        event.registerEntityRenderer(RKEntityRegistry.DARK_SABRE_PROJECTILE.get(), DarkSabreProjectileRenderer::new);
     }
 
     // Item Rarity rendering
