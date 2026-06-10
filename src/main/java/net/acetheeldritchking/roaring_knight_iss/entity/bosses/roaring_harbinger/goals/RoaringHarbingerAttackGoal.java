@@ -1,8 +1,13 @@
 package net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals;
 
+import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
+import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackKeyframe;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.GenericAnimatedWarlockAttackGoal;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
+import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.keyframes.RedCleaveKeyFrame;
+import net.acetheeldritchking.roaring_knight_iss.particle.RedCleaveParticleOptions;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class RoaringHarbingerAttackGoal extends GenericAnimatedWarlockAttackGoal<RoaringHarbingerBoss> {
     final RoaringHarbingerBoss boss;
@@ -63,6 +68,23 @@ public class RoaringHarbingerAttackGoal extends GenericAnimatedWarlockAttackGoal
 
     public void setTarget(LivingEntity target) {
         this.target = target;
+    }
+
+    @Override
+    protected void onHitFrame(AttackKeyframe attackKeyframe, float meleeRange) {
+        super.onHitFrame(attackKeyframe, meleeRange);
+        // Red Cleave
+        if (attackKeyframe instanceof RedCleaveKeyFrame apostleKeyFrame)
+        {
+            boolean mirrored = apostleKeyFrame.swingData.mirrored();
+            boolean vertical = apostleKeyFrame.swingData.vertical();
+
+            Vec3 forward = boss.getForward();
+            float reach = 2 * boss.getScale();
+            Vec3 hitLoc = boss.getBoundingBox().getCenter().add(boss.getForward().multiply(reach, 0.5F, reach));
+            MagicManager.spawnParticles(boss.level(),
+                    new RedCleaveParticleOptions((float) forward.x, (float) forward.y, (float) forward.z, mirrored, vertical, mob.getScale()), hitLoc.x, hitLoc.y, hitLoc.z, 1, 0, 0, 0, 0, true);
+        }
     }
 
     @Override

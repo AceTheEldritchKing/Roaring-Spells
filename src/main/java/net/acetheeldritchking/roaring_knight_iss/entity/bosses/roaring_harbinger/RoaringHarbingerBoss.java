@@ -8,6 +8,7 @@ import io.redspace.ironsspellbooks.entity.mobs.goals.MomentHurtByTargetGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.SpellBarrageGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackAnimationData;
+import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackKeyframe;
 import io.redspace.ironsspellbooks.entity.mobs.keeper.KeeperEntity;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.ExtendedServerBossEvent;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.FireBossEntity;
@@ -21,6 +22,7 @@ import net.acetheeldritchking.aces_spell_utils.utils.boss_music.UniqueBossMusicM
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.ExtremeSlashAbilityGoal;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.RoaringHarbingerAttackGoal;
+import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.keyframes.RedCleaveKeyFrame;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKSoundEvents;
 import net.minecraft.ChatFormatting;
@@ -69,7 +71,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
     }
 
     // Boss Bar
-    private static final BossbarManager.BossbarSprite BOSSBAR_SPRITE = new BossbarManager.BossbarSprite(TheRoaringSpellbooks.id("boss_bars/black_executioner_boss_bar"), 192, 18, 3, -1);
+    private static final BossbarManager.BossbarSprite BOSSBAR_SPRITE = new BossbarManager.BossbarSprite(TheRoaringSpellbooks.id("boss_bars/harbinger_of_roaring_boss_bar"), 192, 18, 3, -1);
 
     // These are used for doing boss bars, setting up the phase serializer for NBT, and stopping and starting music
     private ExtendedServerBossEvent bossEvent;
@@ -79,8 +81,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
     private final static EntityDataAccessor<Boolean> TORMENT_MODE = SynchedEntityData.defineId(RoaringHarbingerBoss.class, EntityDataSerializers.BOOLEAN);
     public static final byte CLIENT_STOP_TRACKING = 0;
     public static final byte CLIENT_START_TRACKING = 1;
-    public static final byte PROC_PARRY = 2;
-    public static final byte PROC_RAGE_QUIT = 3;
     public static final byte START_MUSIC = 4;
     public static final byte STOP_MUSIC = 5;
 
@@ -95,8 +95,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
     int spawnTimer;
     private static final int spawnAnimTime = (int) (7.59 * 20);
     private static final int spawnDelay = 20;
-    int parryTime;
-    int parryCooldown;
     // The amount of time it takes to build up rage again
     int rageTime;
     int rageCooldown;
@@ -171,8 +169,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
                     BossMusicManager.createOrResumeInstance(this);
                 }*/
             }
-            //case PROC_PARRY -> procParry();
-            //case PROC_RAGE_QUIT -> procEnraged();
             case START_MUSIC -> UniqueBossMusicManager.createOrResumeInstance(this);
             case STOP_MUSIC -> UniqueBossMusicManager.stop(this);
         }
@@ -261,17 +257,38 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         this.goalSelector.addGoal(2, new SpellBarrageGoal(this, SpellRegistry.ELDRITCH_BLAST_SPELL.get(), 1, 3, 80, 150, 3));
         this.goalSelector.addGoal(4, new SpellBarrageGoal(this, SpellRegistry.TELEPORT_SPELL.get(), 1, 3, 80, 150, 3));
 
-        this.goalSelector.addGoal(3, new ExtremeSlashAbilityGoal(this));
+        this.goalSelector.addGoal(2, new ExtremeSlashAbilityGoal(this));
 
         this.attackGoal = (RoaringHarbingerAttackGoal) new RoaringHarbingerAttackGoal(this, 1.5F, 25, 40)
                 .setMoveset(List.of(
                         new AttackAnimationData(42, "slash_1", 22),
-                        new AttackAnimationData(51, "slash_2", 26)
+                        new AttackAnimationData(51, "slash_2", 26),
+                        AttackAnimationData.builder("consecutive_slash")
+                                .length(120)
+                                .area(0.25f)
+                                .rangeMultiplier(4.5f)
+                                .attacks(
+                                        new RedCleaveKeyFrame(28, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(33, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(35, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(41, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(45, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(50, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(52, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(57, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(60, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(65, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(68, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(74, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(77, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false)),
+                                        new RedCleaveKeyFrame(82, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, true)),
+                                        new RedCleaveKeyFrame(85, new Vec3(0, 0, 0), new Vec3(0, 0, 0), new RedCleaveKeyFrame.SwingData(false, false))
+                                ).build()
                 ))
                 .setComboChance(0.8F)
-                .setMeleeAttackInverval(50, 80)
+                .setMeleeAttackInverval(45, 55)
                 .setMeleeMovespeedModifier(1.5F)
-                .setMeleeBias(0.0f, 0.0f)
+                .setMeleeBias(0.75f, 1.0f)
                 .setSpells(
                         // Attack
                         List.of(

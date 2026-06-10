@@ -1,5 +1,6 @@
 package net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals;
 
+import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.goals.AnimatedActionGoal;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
@@ -14,7 +15,7 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
     @Override
     protected boolean canStartAction() {
         // Do it if the mob is close to us, so we can get them out of our face
-        return mob.onGround() && mob.getTarget() != null && mob.distanceToSqr(mob.getTarget()) < 5 * 5;
+        return mob.onGround() && mob.getTarget() != null && mob.distanceToSqr(mob.getTarget()) < 7 * 7;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
 
     @Override
     protected int getCooldown() {
-        return 400;
+        return Utils.random.nextIntBetweenInclusive(245, 395);
     }
 
     @Override
