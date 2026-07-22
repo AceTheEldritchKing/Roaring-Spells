@@ -12,11 +12,10 @@ public class RKRarities {
             -1,
             "roaring_knight_iss:shaded",
             (UnaryOperator<Style>) ((style) -> style.withColor(
-                    UniqueRarityColorHelper.getPulsingBlendColor(
-                            2000,
+                    UniqueRarityColorHelper.getPulsingColor(
+                            5000,
                             0xd8d6e9,
-                            0xffffff,
-                            0x0e0917
+                            0x130b21
                     )))
     );
 }

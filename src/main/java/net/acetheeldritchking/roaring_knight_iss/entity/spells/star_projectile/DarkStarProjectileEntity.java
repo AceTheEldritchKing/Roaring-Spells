@@ -40,9 +40,9 @@ public class DarkStarProjectileEntity extends AbstractMagicProjectile implements
     // Stuff for the actual movement and explarding
     private static int startTicks = 0;
     private static int pullTicks = 0;
-    private final static double maxRadius = 12.0;
+    private final static double maxRadius = 20.0;
     private final static double pullInTargetRadius = 3.0;
-    private final static double angularSpeed = Math.toRadians(5.0);
+    private final static double angularSpeed = Math.toRadians(6.0);
     private final static double outwardSpeed = 0.8;
     private final static int fragCount = 2;
 
@@ -95,30 +95,41 @@ public class DarkStarProjectileEntity extends AbstractMagicProjectile implements
     public void tick() {
         super.tick();
 
-        int age = this.tickCount;
-        double angle = this.initialAngle + age * angularSpeed;
-        double radius;
+        if (!level().isClientSide)
+        {
+            int age = this.tickCount;
+            double angle = this.initialAngle + age * angularSpeed;
+            double radius;
 
-        if (age <= startTicks)
-        {
-            radius = Math.min(age * outwardSpeed, maxRadius);
-        } else if (age <= startTicks + pullTicks)
-        {
-            double t = (double) (age - startTicks) / pullTicks;
-            radius = Mth.lerp(t, maxRadius, pullInTargetRadius);
-        } else
-        {
-            // Explard
-            explodeStar();
-            return;
+            if (age <= startTicks)
+            {
+                radius = Math.min(age * outwardSpeed, maxRadius);
+            } else if (age <= startTicks + pullTicks)
+            {
+                double t = (double) (age - startTicks) / pullTicks;
+                radius = Mth.lerp(t, maxRadius, pullInTargetRadius);
+            } else
+            {
+                // Explard
+                explodeStar();
+                return;
+            }
+
+            // Movin and groovin
+            Vec3 origin = getOrigin();
+            double targetX = origin.x + Math.cos(angle) * radius;
+            double targetY = origin.y + 1.2;
+            double targetZ = origin.z + Math.sin(angle) * radius;
+
+            Vec3 targetPos = new Vec3(targetX, targetY, targetZ);
+
+            Vec3 requiredVelocity = targetPos.subtract(this.position());
+
+            this.setDeltaMovement(requiredVelocity);
+
+            // Force the server to sync the new velocity to the client side
+            this.hasImpulse = true;
         }
-
-        // Movin and groovin
-        Vec3 origin = getOrigin();
-        double x = origin.x + Math.cos(angle) * radius;
-        double y = origin.y + 1.2;
-        double z = origin.z + Math.sin(angle) * radius;
-        this.setPos(x, y, z);
     }
 
     private Vec3 getOrigin()
@@ -128,6 +139,26 @@ public class DarkStarProjectileEntity extends AbstractMagicProjectile implements
             this.fallbackOrigin = this.getOwner().position();
         }
         return this.fallbackOrigin;
+    }
+
+    private Vec3 offsetSpiral(int age)
+    {
+        double angle = this.initialAngle + age * angularSpeed;
+        double radius;
+
+        if (age <= startTicks)
+        {
+            radius = Math.min(age * outwardSpeed, maxRadius);
+        } else
+        {
+            int starAge = Math.min(age, startTicks + pullTicks);
+            double time = (double) (starAge - startTicks) / pullTicks;
+            radius = Mth.lerp(time, maxRadius, pullInTargetRadius);
+        }
+
+        Vec3 spiral = new Vec3(Math.cos(angle) * radius, 1.2, Math.sin(angle) * radius);
+
+        return spiral;
     }
 
     // EXPLARD MY STAR!!! - December Holiday
@@ -147,6 +178,8 @@ public class DarkStarProjectileEntity extends AbstractMagicProjectile implements
 
             DarkStarShrapnelProjectileEntity shrapnel = new DarkStarShrapnelProjectileEntity(this.level());
             shrapnel.setOwner(this);
+            shrapnel.setDamage(10.0F);
+            shrapnel.setExplosionRadius(5.0F);
             shrapnel.setPos(this.getX(), this.getY(), this.getZ());
 
             double speed = 0.2;
@@ -175,6 +208,7 @@ public class DarkStarProjectileEntity extends AbstractMagicProjectile implements
                     DamageSources.applyDamage(entity, damage, damageSource);
                 }
             }
+            //explodeStar();
             this.discardHelper(hitresult);
         }
     }

@@ -44,7 +44,7 @@ public class SwordSpreadAbilityGoal extends AnimatedActionGoal<RoaringHarbingerB
             mob.attackGoal.setTarget(mob.getTarget());
         }
         // Stop moving while we do this ability
-        if (abilityTimer <= 112)
+        if (abilityTimer <= 69)
         {
             this.mob.getNavigation().stop();
             this.mob.lerpMotion(0, 0, 0);

@@ -2,6 +2,7 @@ package net.acetheeldritchking.roaring_knight_iss.event;
 
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.entity.bosses.black_executioner.BlackExecutionerRenderer;
+import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.DarkFountainSpireRenderer;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_sabre_projectile.DarkSabreProjectileRenderer;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_star_projectiles.DarkStarProjectileRenderer;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_star_projectiles.DarkStarShrapnelProjectileRenderer;
@@ -30,6 +31,7 @@ public class RKClientEvents {
         event.registerEntityRenderer(RKEntityRegistry.DARK_SABRE_PROJECTILE.get(), DarkSabreProjectileRenderer::new);
         event.registerEntityRenderer(RKEntityRegistry.DARK_STAR_PROJECTILE.get(), DarkStarProjectileRenderer::new);
         event.registerEntityRenderer(RKEntityRegistry.DARK_STAR_SHRAPNEL.get(), DarkStarShrapnelProjectileRenderer::new);
+        event.registerEntityRenderer(RKEntityRegistry.DARK_FOUNTAIN_SPIRE.get(), DarkFountainSpireRenderer::new);
     }
 
     // Item Rarity rendering

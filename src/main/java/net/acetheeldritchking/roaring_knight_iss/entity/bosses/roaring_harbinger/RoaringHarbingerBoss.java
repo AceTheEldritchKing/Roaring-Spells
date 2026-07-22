@@ -106,9 +106,9 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
     protected static final int ROARING_ANIM_DURATION = 269;
     protected static final int ROARING_STAR_SHOOT_TIMESTAMP = 20;
     protected static final int ROARING_PULL_IN_START_TIMESTAMP = 216;
-    protected static final int DARK_STAR_COUNT = 6;
-    protected static final int DARK_STAR_INTERVAL_TICKS = 10;
-    protected static final int DARK_STAR_PER_WAVE = 8;
+    protected static final int DARK_STAR_COUNT = 10;
+    protected static final int DARK_STAR_INTERVAL_TICKS = 5;
+    protected static final int DARK_STAR_PER_WAVE = 10;
     protected double anglePerWave = 15.0;
     private int darkStarAttackTimer = 0;
     private int darkStarWavesSpawned = 0;
@@ -429,6 +429,10 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
             return;
         }
 
+        // So we stop moving while we do this cause I'm tired of this boss being pushed around
+        this.getNavigation().stop();
+        this.lerpMotion(0, 0, 0);
+
         targetSelector.tick();
         if (this.getTarget() != null)
         {
@@ -443,6 +447,16 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         {
             this.darkStarAttackTimer = 0;
             this.darkStarWavesSpawned = 0;
+        }
+
+        if (tick == ROARING_PULL_IN_START_TIMESTAMP)
+        {
+            // Set phase
+            setPhase(Phase.SecondPhase);
+            // Set goals
+            secondPhaseGoals();
+            // Titan
+            setTitan(true);
         }
 
         if (tick >= ROARING_STAR_SHOOT_TIMESTAMP && tick < ROARING_PULL_IN_START_TIMESTAMP)
@@ -473,7 +487,8 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
             DarkStarProjectileEntity darkStar = new DarkStarProjectileEntity(this.level(), angle, ROARING_STAR_SHOOT_TIMESTAMP, ROARING_PULL_IN_START_TIMESTAMP, this);
             darkStar.setOwner(this);
             darkStar.setPos(this.getX(), this.getEyeY(), this.getZ());
-            darkStar.setDamage(10F);
+            darkStar.setDamage(25F);
+            darkStar.setExplosionRadius(15.0F);
 
             this.level().addFreshEntity(darkStar);
         }
@@ -498,12 +513,6 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
             if (!level().isClientSide)
             {
                 handleHalfHealthRoaring();
-                // Set phase
-                setPhase(Phase.SecondPhase);
-                // Set goals
-                secondPhaseGoals();
-                // Titan
-                setTitan(true);
             }
         }
     }
