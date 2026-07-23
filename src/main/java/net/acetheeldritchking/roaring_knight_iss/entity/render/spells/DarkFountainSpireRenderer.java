@@ -55,7 +55,7 @@ public class DarkFountainSpireRenderer extends EntityRenderer<DarkFountainSpireE
                     .vertex(-halfRadius, 250, halfRadius).uv(1, max).normal(0, 1, 0)
                     .vertex(-halfRadius, 250, -halfRadius).uv(0, max).normal(0, 1, 0)
                     // F0F0F5
-                    .color(Mth.clamp(.8f * f, 0, 1), Mth.clamp(.8f * f * f, 0, 1), Mth.clamp(.5f * f * f, 0, 1))
+                    .color(Mth.clamp(1.0f * f, 0, 1), Mth.clamp(.0f * f * f, 0, 1), Mth.clamp(1.0f * f * f, 0, 1))
                     //.color(Mth.clamp(0.941F * f, 0, 1), Mth.clamp(0.941F * f * f, 0, 1), Mth.clamp(0.961F * f * f, 0, 1))
                     .light(LightTexture.FULL_BRIGHT)
                     .overlay(OverlayTexture.NO_OVERLAY)
@@ -68,7 +68,7 @@ public class DarkFountainSpireRenderer extends EntityRenderer<DarkFountainSpireE
                     .vertex(-quarterRadius, 250, quarterRadius).uv(1, max).normal(0, 1, 0)
                     .vertex(-quarterRadius, 250, -quarterRadius).uv(0, max).normal(0, 1, 0)
                     // 03000F
-                    .color(Mth.clamp(1f * f, 0, 1), Mth.clamp(.85f * f, 0, 1), Mth.clamp(.7f * f * f, 0, 1))
+                    .color(Mth.clamp(.0F * f, 0, 1), Mth.clamp(.0F * f, 0, 1), Mth.clamp(1.0F * f * f, 0, 1))
                     //.color(Mth.clamp(0.012F * f, 0, 1), Mth.clamp(0.0F * f, 0, 1), Mth.clamp(0.059F * f * f, 0, 1))
                     .light(LightTexture.FULL_BRIGHT)
                     .overlay(OverlayTexture.NO_OVERLAY)
