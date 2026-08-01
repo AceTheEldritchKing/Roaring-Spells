@@ -2,6 +2,7 @@ package net.acetheeldritchking.roaring_knight_iss;
 
 import net.acetheeldritchking.roaring_knight_iss.items.armor.RKArmorMaterialRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.*;
+import net.acetheeldritchking.roaring_knight_iss.utils.RKServerConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class TheRoaringSpellbooks {
         RKParticleRegistry.register(modEventBus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        //modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, RKServerConfig.SPEC);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

@@ -6,6 +6,7 @@ import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_sabre_projectile.DarkSabreProjectile;
+import net.acetheeldritchking.roaring_knight_iss.utils.RKServerConfig;
 
 public class SwordSurroundAbilityGoal extends AnimatedActionGoal<RoaringHarbingerBoss> {
     public SwordSurroundAbilityGoal(RoaringHarbingerBoss mob) {
@@ -57,10 +58,10 @@ public class SwordSurroundAbilityGoal extends AnimatedActionGoal<RoaringHarbinge
             int delay = Utils.random.nextIntBetweenInclusive(80, 100);
             if (mob.isTitan())
             {
-                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 7, 5.0, delay, 1.0F, 15);
+                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 7, 5.0, delay, (float) (RKServerConfig.swordSurroundSpeed + 0.2F), 15);
             } else
             {
-                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 5, 5.0, delay, 0.95F, 10);
+                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 5, 5.0, delay, (float) RKServerConfig.swordSurroundSpeed, 10);
             }
         }
     }

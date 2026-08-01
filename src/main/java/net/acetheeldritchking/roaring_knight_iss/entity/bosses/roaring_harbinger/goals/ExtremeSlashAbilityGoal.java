@@ -48,8 +48,8 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
 
     @Override
     protected int getCooldown() {
-        //return Utils.random.nextIntBetweenInclusive(245, 395);
-        return Utils.random.nextIntBetweenInclusive(50, 100);
+        return Utils.random.nextIntBetweenInclusive(245, 395);
+        //return Utils.random.nextIntBetweenInclusive(50, 100);
     }
 
     @Override

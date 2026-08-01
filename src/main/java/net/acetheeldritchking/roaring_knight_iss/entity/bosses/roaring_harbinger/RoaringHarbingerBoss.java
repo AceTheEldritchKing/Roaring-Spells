@@ -19,10 +19,7 @@ import net.acetheeldritchking.aces_spell_utils.entity.mobs.goals.WizardSpellComb
 import net.acetheeldritchking.aces_spell_utils.registries.ASAttributeRegistry;
 import net.acetheeldritchking.aces_spell_utils.utils.boss_music.UniqueBossMusicManager;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
-import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.ExtremeSlashAbilityGoal;
-import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.RoaringHarbingerAttackGoal;
-import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.SwordSpreadAbilityGoal;
-import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.SwordSurroundAbilityGoal;
+import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.goals.*;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.keyframes.RedCleaveKeyFrame;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_projectile.DarkStarProjectileEntity;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
@@ -95,7 +92,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
 
     // Animation ticks
     public int transitionAnimationTime = 180;
-    public int deathAnimationTime = 360;
+    public int deathAnimationTime = 190;
     int spawnTimer;
     private static final int spawnAnimTime = (int) (7.59 * 20);
     private static final int spawnDelay = 20;
@@ -276,6 +273,8 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
 
         this.goalSelector.addGoal(2, new SwordSurroundAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSpreadAbilityGoal(this));
+        // Have this at 1 so we can keep up with the player or target
+        this.goalSelector.addGoal(1, new PursuitAbilityGoal(this));
 
         this.attackGoal = (RoaringHarbingerAttackGoal) new RoaringHarbingerAttackGoal(this, 1.5F, 25, 40)
                 .setMoveset(List.of(
@@ -294,7 +293,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
                         // Defense
                         List.of(
                                 SpellRegistry.COUNTERSPELL_SPELL.get(),
-                                SpellRegistry.ABYSSAL_SHROUD_SPELL.get()
+                                SpellRegistry.EVASION_SPELL.get()
                         ),
                         // Movement
                         List.of(
@@ -314,7 +313,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
                 List.of(
                         SpellRegistry.TELEPORT_SPELL.get(),
                         SpellRegistry.COUNTERSPELL_SPELL.get(),
-                        SpellRegistry.ABYSSAL_SHROUD_SPELL.get()
+                        SpellRegistry.EVASION_SPELL.get()
                 ), 1.3f, 1.3f, 80, 150));
 
         this.goalSelector.addGoal(5, new PatrolNearLocationGoal(this, 32.0F, 0.9));
@@ -335,6 +334,8 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         this.goalSelector.addGoal(2, new ExtremeSlashAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSurroundAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSpreadAbilityGoal(this));
+        // Have this at 1 so we can keep up with the player or target
+        this.goalSelector.addGoal(1, new PursuitAbilityGoal(this));
 
         this.attackGoal = (RoaringHarbingerAttackGoal) new RoaringHarbingerAttackGoal(this, 1.65F, 15, 30)
                 .setMoveset(List.of(
@@ -374,7 +375,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
                         // Defense
                         List.of(
                                 SpellRegistry.COUNTERSPELL_SPELL.get(),
-                                SpellRegistry.ABYSSAL_SHROUD_SPELL.get()
+                                SpellRegistry.EVASION_SPELL.get()
                         ),
                         // Movement
                         List.of(
@@ -394,7 +395,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
                 List.of(
                         SpellRegistry.TELEPORT_SPELL.get(),
                         SpellRegistry.COUNTERSPELL_SPELL.get(),
-                        SpellRegistry.ABYSSAL_SHROUD_SPELL.get()
+                        SpellRegistry.EVASION_SPELL.get()
                 ), 1.3f, 1.3f, 80, 150));
 
         this.goalSelector.addGoal(5, new PatrolNearLocationGoal(this, 32.0F, 0.9));
@@ -592,6 +593,36 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
         }
 
         return super.hurt(source, amount);
+    }
+
+    @Override
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
+        if (this.isDeadOrDying() && !this.level().isClientSide)
+        {
+            this.stopHalfHealthRoaring();
+            this.castComplete();
+            this.attackGoal.stop();
+            this.serverTriggerAnimation("death");
+            this.serverTriggerEvent(STOP_MUSIC);
+        }
+    }
+
+    @Override
+    protected void tickDeath() {
+        this.deathTime++;
+
+        if (!level().isClientSide)
+        {
+            if (this.deathTime >= deathAnimationTime && !this.level().isClientSide() && !this.isRemoved())
+            {
+                if (this.deathLoot != null)
+                {
+                    deathLoot.getItems().forEach(this::spawnAtLocation);
+                }
+                this.remove(RemovalReason.KILLED);
+            }
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
 import io.redspace.ironsspellbooks.entity.spells.AbstractMagicProjectile;
 import io.redspace.ironsspellbooks.util.NBT;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
+import net.acetheeldritchking.roaring_knight_iss.utils.RKUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -223,6 +224,8 @@ public class DarkSabreProjectile extends AbstractMagicProjectile implements IEnt
         double y = target.getY() + (target.getEyeHeight() * 0.5);
         double z = target.getZ() + Math.sin(currentAngle) * radius;
 
+        RKUtils.spawnTelegraphedParticleLine(target.getBoundingBox().getCenter(), new Vec3(x, y, z), 0.35F, this);
+
         moveTo(x, y, z);
         setDeltaMovement(Vec3.ZERO);
     }
@@ -249,6 +252,9 @@ public class DarkSabreProjectile extends AbstractMagicProjectile implements IEnt
         }
 
         Vec3 spherePoint = target.getBoundingBox().getCenter().add(sphereOffset);
+
+        RKUtils.spawnTelegraphedParticleLine(target.getBoundingBox().getCenter(), spherePoint, 0.35F, this);
+
         moveTo(spherePoint.x, spherePoint.y, spherePoint.z);
         setDeltaMovement(Vec3.ZERO);
     }
