@@ -5,6 +5,9 @@
 
   "block.roaring_knight_iss.example_block": "Example Block",
 
+  "item.roaring_knight_iss.shadow_crystal": "Shadow Crystal",
+  "item.roaring_knight_iss.black_shard": "Black Shard",
+
   "item.roaring_knight_iss.dark_sabre": "Dark Sabre",
   "item.roaring_knight_iss.dark_sabre.desc": "[Dark/Star] - You take less damage from entities who's types are Dark or Star",
   "item.roaring_knight_iss.dark_sabre.desc2": "Fountain Opener - Striking the ground opens a small Dark Fountain",

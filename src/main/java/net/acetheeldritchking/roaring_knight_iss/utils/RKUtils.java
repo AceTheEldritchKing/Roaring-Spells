@@ -1,12 +1,14 @@
 package net.acetheeldritchking.roaring_knight_iss.utils;
 
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 public class RKUtils {
-    public static void spawnTelegraphedParticleLine(Vec3 to, Vec3 from, double spacing, Entity owner)
+    public static void spawnTelegraphedParticleLine(Vec3 to, Vec3 from, double spacing, Entity owner, ParticleOptions particle)
     {
         if (!owner.level().isClientSide)
         {
@@ -26,7 +28,7 @@ public class RKUtils {
                 for (int i = 0; i <= steps; i++)
                 {
                     Vec3 point = to.add(direction.scale(i * spacing));
-                    serverLevel.sendParticles(ParticleTypes.SCULK_SOUL, point.x, point.y, point.z, 0, 0, 0, 0, 0);
+                    serverLevel.sendParticles(particle, point.x, point.y, point.z, 0, 0, 0, 0, 0);
                 }
             }
         }

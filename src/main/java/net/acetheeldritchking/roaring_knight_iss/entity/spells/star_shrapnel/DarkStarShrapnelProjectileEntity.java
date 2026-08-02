@@ -4,6 +4,7 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.spells.AbstractMagicProjectile;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
+import net.acetheeldritchking.roaring_knight_iss.particles.RKParticleHelper;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
@@ -46,7 +47,7 @@ public class DarkStarShrapnelProjectileEntity extends AbstractMagicProjectile im
         for (int i = 0; i < count; i++) {
             Vec3 random = Utils.getRandomVec3(0.02);
             Vec3 p = vec.scale(f * i);
-            level().addParticle(ParticleHelper.CLEANSE_PARTICLE, this.getX() + random.x + p.x, this.getY() + random.y + p.y, this.getZ() + random.z + p.z, random.x, random.y, random.z);
+            level().addParticle(RKParticleHelper.STAR_SPARKLE, this.getX() + random.x + p.x, this.getY() + random.y + p.y, this.getZ() + random.z + p.z, random.x, random.y, random.z);
         }
     }
 

@@ -2,6 +2,7 @@ package net.acetheeldritchking.roaring_knight_iss.registries;
 
 import io.redspace.ironsspellbooks.util.ItemPropertiesHelper;
 import net.acetheeldritchking.aces_spell_utils.items.example.items.armor.ExampleWarlockArmorItem;
+import net.acetheeldritchking.aces_spell_utils.utils.ASRarities;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.items.armor.RoaringHarbingerArmorItem;
 import net.acetheeldritchking.roaring_knight_iss.items.weapons.DarkSabreItem;
@@ -18,6 +19,16 @@ import java.util.Collection;
 
 public class RKItemRegistry {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TheRoaringSpellbooks.MOD_ID);
+
+    /***
+     * Generic Items
+     */
+    // Shard of Malice
+    public static final DeferredHolder<Item, Item> SHADOW_CRYSTAL = ITEMS.register("shadow_crystal",
+            () -> new Item(ItemPropertiesHelper.material().stacksTo(8).rarity(RKRarities.SHADED_RARITY_PROXY.getValue())));
+
+    public static final DeferredHolder<Item, Item> BLACK_SHARD = ITEMS.register("black_shard",
+            () -> new Item(ItemPropertiesHelper.material().fireResistant().rarity(RKRarities.SHADED_RARITY_PROXY.getValue())));
 
     /***
      * Weapons

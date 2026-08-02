@@ -6,7 +6,7 @@ import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_fount
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_sabre_projectile.DarkSabreProjectileRenderer;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_star_projectiles.DarkStarProjectileRenderer;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_star_projectiles.DarkStarShrapnelProjectileRenderer;
-import net.acetheeldritchking.roaring_knight_iss.particle.RedCleaveParticle;
+import net.acetheeldritchking.roaring_knight_iss.particles.*;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKParticleRegistry;
 import net.neoforged.api.distmarker.Dist;
@@ -55,5 +55,11 @@ public class RKClientEvents {
     public static void registerParticles(RegisterParticleProvidersEvent event)
     {
         event.registerSpriteSet(RKParticleRegistry.RED_CLEAVE_PARTICLE.get(), RedCleaveParticle.Provider::new);
+        event.registerSpriteSet(RKParticleRegistry.SWOON_PARTICLE.get(), SwoonParticle.Provider::new);
+        event.registerSpriteSet(RKParticleRegistry.LARGE_DARK_BUBBLE_PARTICLE.get(), LargeDarkBubbleParticle.Provider::new);
+        event.registerSpriteSet(RKParticleRegistry.DARK_BUBBLE_PARTICLE.get(), DarkBubbleParticle.Provider::new);
+        event.registerSpriteSet(RKParticleRegistry.DARK_STAR_PARTICLE.get(), DarkStarParticle.Provider::new);
+        event.registerSpriteSet(RKParticleRegistry.RED_SPARKLE_PARTICLE.get(), RedSparkleParticle.Provider::new);
+        event.registerSpriteSet(RKParticleRegistry.STAR_SPARKLE_PARTICLE.get(), StarSparkleParticle.Provider::new);
     }
 }

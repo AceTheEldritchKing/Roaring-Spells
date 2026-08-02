@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "roaring_knight_iss:item/black_shard"
+  }
+}

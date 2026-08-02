@@ -11,13 +11,17 @@ import io.redspace.ironsspellbooks.particle.BlastwaveParticleOptions;
 import io.redspace.ironsspellbooks.registries.EntityRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
+import net.acetheeldritchking.aces_spell_utils.utils.ASUtils;
+import net.acetheeldritchking.roaring_knight_iss.particles.RKParticleHelper;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -49,7 +53,7 @@ public class DarkFountainSpireEntity extends AoeEntity implements AntiMagicSusce
     @Override
     protected Vec3 getInflation() {
         Vec3 normal = new Vec3(2, 2, 2);
-        Vec3 big = new Vec3(6, 6, 6);
+        Vec3 big = new Vec3(7.5, 7.5, 7.5);
         return isFullFountain ? big : normal;
     }
 
@@ -86,8 +90,8 @@ public class DarkFountainSpireEntity extends AoeEntity implements AntiMagicSusce
             if (!level().isClientSide)
             {
                 checkHits();
-                MagicManager.spawnParticles(level(), ParticleHelper.EMBERS, getX(), getY() + 0.06, getZ(), 50, getRadius() * .7f, .2f, getRadius() * .7f, 0.6f, true);
-                MagicManager.spawnParticles(level(), new BlastwaveParticleOptions(1f, 0.85f, 0.4f, 7f), getX(), getY() + 0.06, getZ(), 1, 0, 0, 0, 0, true);
+                MagicManager.spawnParticles(level(), RKParticleHelper.DARK_BUBBLE, getX() + 0.05, getY() + 0.06, getZ(), 50, getRadius() * .7f, .2f, getRadius() * .7f, 0.2f, true);
+                MagicManager.spawnParticles(level(), new BlastwaveParticleOptions(ASUtils.rbgToVector3F(14, 13, 18), 7f), getX(), getY() + 0.06, getZ(), 1, 0, 0, 0, 0, true);
                 level().playSound(null, this.blockPosition(), SoundRegistry.SUNBEAM_IMPACT.get(), SoundSource.NEUTRAL, 4.5f, Utils.random.nextIntBetweenInclusive(9, 11) * .1f);
             }
         }

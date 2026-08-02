@@ -9,6 +9,7 @@ import io.redspace.ironsspellbooks.render.SpellRenderingHelper;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_fountain.DarkFountainSpireEntity;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -30,7 +31,7 @@ public class DarkFountainSpireRenderer extends EntityRenderer<DarkFountainSpireE
     public void render(DarkFountainSpireEntity spire, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         poseStack.pushPose();
 
-        float maxRadius = spire.isFullFountain ? 6.5F : 2.5F;
+        float maxRadius = spire.isFullFountain ? 7.5F : 2.5F;
         float minRadius = 0.005F;
 
         float deltaTicks = spire.tickCount + partialTick;
@@ -40,14 +41,28 @@ public class DarkFountainSpireRenderer extends EntityRenderer<DarkFountainSpireE
         float f = deltaTicks / DarkFountainSpireEntity.WARMUP_TIME;
         f *= f;
         float radius = Mth.clampedLerp(maxRadius, minRadius, f);
-        VertexConsumer innerSpire = bufferSource.getBuffer(RenderHelper.CustomerRenderType.magic(SpellRenderingHelper.BEACON));
+        //VertexConsumer innerSpire = bufferSource.getBuffer(RenderHelper.CustomerRenderType.magic(SpellRenderingHelper.BEACON));
+        //VertexConsumer outerSpire = bufferSource.getBuffer(RenderType.entityTranslucent(SpellRenderingHelper.BEACON, true));
         float halfRadius = radius * 0.5F;
         float quarterRadius = halfRadius * 0.5F;
         float yMin = spire.onGround() ? 0 : (float) (Utils.findRelativeGroundLevel(spire.level(), spire.position(), 8) - spire.getY());
 
         for (int i = 0; i < 4; i++)
         {
-            // White outline
+            // Dark, darker, yet darker
+            RenderHelper.quadBuilder()
+                    .vertex(-quarterRadius, yMin, -quarterRadius).uv(0, min).normal(0, 1, 0)
+                    .vertex(-quarterRadius, yMin, quarterRadius).uv(1, min).normal(0, 1, 0)
+                    .vertex(-quarterRadius, 250, quarterRadius).uv(1, max).normal(0, 1, 0)
+                    .vertex(-quarterRadius, 250, -quarterRadius).uv(0, max).normal(0, 1, 0)
+                    // 03000F
+                    .color(0.0F, 0.0F, 0.0F)
+                    //.color(Mth.clamp(0.012F * f, 0, 1), Mth.clamp(0.0F * f, 0, 1), Mth.clamp(0.059F * f * f, 0, 1))
+                    .light(LightTexture.FULL_BRIGHT)
+                    .overlay(OverlayTexture.NO_OVERLAY)
+                    .matrix(poseStack.last().pose())
+                    .build(bufferSource.getBuffer(RenderType.entityTranslucent(SpellRenderingHelper.BEACON, true)));
+            // Blue? outline
             RenderHelper.quadBuilder()
                     .vertex(-halfRadius, yMin, -halfRadius).uv(0, min).normal(0, 1, 0)
                     .vertex(-halfRadius, yMin, halfRadius).uv(1, min).normal(0, 1, 0)
@@ -59,20 +74,7 @@ public class DarkFountainSpireRenderer extends EntityRenderer<DarkFountainSpireE
                     .light(LightTexture.FULL_BRIGHT)
                     .overlay(OverlayTexture.NO_OVERLAY)
                     .matrix(poseStack.last().pose())
-                    .build(innerSpire);
-            // Dark, darker, yet darker
-            RenderHelper.quadBuilder()
-                    .vertex(-quarterRadius, yMin, -quarterRadius).uv(0, min).normal(0, 1, 0)
-                    .vertex(-quarterRadius, yMin, quarterRadius).uv(1, min).normal(0, 1, 0)
-                    .vertex(-quarterRadius, 250, quarterRadius).uv(1, max).normal(0, 1, 0)
-                    .vertex(-quarterRadius, 250, -quarterRadius).uv(0, max).normal(0, 1, 0)
-                    // 03000F
-                    .color(Mth.clamp(.0F * f, 0, 1), Mth.clamp(.0F * f, 0, 1), Mth.clamp(0.0F * f * f, 0, 1))
-                    //.color(Mth.clamp(0.012F * f, 0, 1), Mth.clamp(0.0F * f, 0, 1), Mth.clamp(0.059F * f * f, 0, 1))
-                    .light(LightTexture.FULL_BRIGHT)
-                    .overlay(OverlayTexture.NO_OVERLAY)
-                    .matrix(poseStack.last().pose())
-                    .build(innerSpire);
+                    .build(bufferSource.getBuffer(RenderHelper.CustomerRenderType.magic(SpellRenderingHelper.BEACON)));
             poseStack.mulPose(Axis.YP.rotationDegrees(90));
         }
 

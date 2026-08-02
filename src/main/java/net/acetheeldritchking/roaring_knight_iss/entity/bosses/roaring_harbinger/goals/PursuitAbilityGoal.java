@@ -20,7 +20,7 @@ public class PursuitAbilityGoal extends AnimatedActionGoal<RoaringHarbingerBoss>
 
     @Override
     protected int getActionTimestamp() {
-        return 26;
+        return 17;
     }
 
     @Override

@@ -1,11 +1,14 @@
 package net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_sabre_projectile;
 
+import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
 import io.redspace.ironsspellbooks.entity.spells.AbstractMagicProjectile;
 import io.redspace.ironsspellbooks.util.NBT;
+import net.acetheeldritchking.roaring_knight_iss.particles.RKParticleHelper;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.utils.RKUtils;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -106,7 +109,15 @@ public class DarkSabreProjectile extends AbstractMagicProjectile implements IEnt
 
     @Override
     public void trailParticles() {
-
+        var vec = getDeltaMovement();
+        var length = vec.length();
+        int count = (int) Math.min(20, Math.round(length) * 3) + 1;
+        float f = (float) length / count;
+        for (int i = 0; i < count; i++) {
+            Vec3 random = Utils.getRandomVec3(0.02);
+            Vec3 p = vec.scale(f * i);
+            level().addParticle(RKParticleHelper.STAR_SPARKLE, this.getX() + random.x + p.x, this.getY() + random.y + p.y, this.getZ() + random.z + p.z, random.x, random.y, random.z);
+        }
     }
 
     @Override
@@ -224,7 +235,10 @@ public class DarkSabreProjectile extends AbstractMagicProjectile implements IEnt
         double y = target.getY() + (target.getEyeHeight() * 0.5);
         double z = target.getZ() + Math.sin(currentAngle) * radius;
 
-        RKUtils.spawnTelegraphedParticleLine(target.getBoundingBox().getCenter(), new Vec3(x, y, z), 0.35F, this);
+        if (age % 2 == 0)
+        {
+            RKUtils.spawnTelegraphedParticleLine(target.getBoundingBox().getCenter(), new Vec3(x, y, z), 0.35F, this, RKParticleHelper.RED_SPARKLE);
+        }
 
         moveTo(x, y, z);
         setDeltaMovement(Vec3.ZERO);
@@ -253,7 +267,10 @@ public class DarkSabreProjectile extends AbstractMagicProjectile implements IEnt
 
         Vec3 spherePoint = target.getBoundingBox().getCenter().add(sphereOffset);
 
-        RKUtils.spawnTelegraphedParticleLine(target.getBoundingBox().getCenter(), spherePoint, 0.35F, this);
+        if (age % 2 == 0)
+        {
+            RKUtils.spawnTelegraphedParticleLine(target.getBoundingBox().getCenter(), spherePoint, 0.35F, this, RKParticleHelper.RED_SPARKLE);
+        }
 
         moveTo(spherePoint.x, spherePoint.y, spherePoint.z);
         setDeltaMovement(Vec3.ZERO);

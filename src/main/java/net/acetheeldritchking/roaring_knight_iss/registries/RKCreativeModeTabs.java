@@ -22,6 +22,8 @@ public class RKCreativeModeTabs {
                     .title(Component.translatable("creative_tab.roaring_knight_iss.items"))
                     .displayItems((itemDisplayParameters, output) -> {
                         // Materials
+                        output.accept(RKItemRegistry.SHADOW_CRYSTAL.get());
+                        output.accept(RKItemRegistry.BLACK_SHARD.get());
                         // Map Items
                         // Curios
                         // Sheaths

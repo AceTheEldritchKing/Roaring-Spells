@@ -26,6 +26,7 @@ import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKSoundEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -50,12 +51,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
+public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEntityWithComplexSpawn {
     public RoaringHarbingerBoss(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         setPersistenceRequired();
@@ -768,5 +770,15 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity {
     @Override
     public boolean bobBodyWhileWalking() {
         return !isAnimating();
+    }
+
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+
+    }
+
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+
     }
 }
