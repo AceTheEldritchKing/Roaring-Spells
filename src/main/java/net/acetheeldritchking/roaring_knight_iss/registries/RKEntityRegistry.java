@@ -1,7 +1,10 @@
 package net.acetheeldritchking.roaring_knight_iss.registries;
 
+import io.redspace.ironsspellbooks.IronsSpellbooks;
+import io.redspace.ironsspellbooks.entity.spells.magma_ball.FireField;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
+import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_fountain.DarkFountainEntity;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_fountain.DarkFountainSpireEntity;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_sabre_projectile.DarkSabreProjectile;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_projectile.DarkStarProjectileEntity;
@@ -54,6 +57,11 @@ public class RKEntityRegistry {
             );
 
     // Dark Fountain
+    public static final DeferredHolder<EntityType<?>, EntityType<DarkFountainEntity>> DARK_FOUNTAIN =
+            ENTITIES.register("dark_fountian", () -> EntityType.Builder.<DarkFountainEntity>of(DarkFountainEntity::new, MobCategory.MISC)
+                    .sized(4f, 1.2f)
+                    .clientTrackingRange(64)
+                    .build(ResourceLocation.fromNamespaceAndPath(TheRoaringSpellbooks.MOD_ID, "dark_fountian").toString()));
 
     // Dark Tower
     public static final DeferredHolder<EntityType<?>, EntityType<DarkFountainSpireEntity>> DARK_FOUNTAIN_SPIRE =

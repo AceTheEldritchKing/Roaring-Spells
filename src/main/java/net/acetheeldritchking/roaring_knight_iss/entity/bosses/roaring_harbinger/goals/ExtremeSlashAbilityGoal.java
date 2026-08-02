@@ -7,6 +7,7 @@ import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.goals.AnimatedActionGoal;
+import io.redspace.ironsspellbooks.entity.spells.target_area.TargetedAreaEntity;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.acetheeldritchking.aces_spell_utils.utils.ASUtils;
@@ -63,6 +64,8 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
         {
             this.mob.getNavigation().stop();
             this.mob.lerpMotion(0, 0, 0);
+
+            TargetedAreaEntity.createTargetAreaEntity(mob.level(), mob.getBoundingBox().getCenter(), 5.5F, 0xc80000, mob);
 
             ASUtils.spawnParticlesInCircle(16, 5.5F, 0.8F, 0.1F, mob, ParticleHelper.ENDER_SPARKS);
         }

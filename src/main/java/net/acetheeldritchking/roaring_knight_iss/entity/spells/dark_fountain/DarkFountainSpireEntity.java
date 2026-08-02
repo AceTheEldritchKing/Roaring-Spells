@@ -6,12 +6,14 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.mobs.AntiMagicSusceptible;
+import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.FireBossEntity;
 import io.redspace.ironsspellbooks.entity.spells.AoeEntity;
 import io.redspace.ironsspellbooks.particle.BlastwaveParticleOptions;
 import io.redspace.ironsspellbooks.registries.EntityRegistry;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.acetheeldritchking.aces_spell_utils.utils.ASUtils;
+import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
 import net.acetheeldritchking.roaring_knight_iss.particles.RKParticleHelper;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -24,6 +26,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -99,8 +102,27 @@ public class DarkFountainSpireEntity extends AoeEntity implements AntiMagicSusce
         if (this.tickCount > WARMUP_TIME)
         {
             // Leave fountain here when done
+            if (isFullFountain)
+            {
+                createDarkFountain();
+                discard();
+            }
             discard();
         }
+    }
+
+    private void createDarkFountain()
+    {
+        DarkFountainEntity darkFountain = new DarkFountainEntity(this.level());
+        darkFountain.setOwner(this.getOwner());
+        darkFountain.setPos(Utils.moveToRelativeGroundLevel(level(), this.position(), 3));
+        darkFountain.setRadius(5);
+        darkFountain.setCircular();
+        darkFountain.setDamage(this.getDamage() * .5f);
+        darkFountain.setDuration(20 * 15);
+        darkFountain.setDelay(50);
+        darkFountain.setRadiusPerTick(-darkFountain.getRadius() / darkFountain.getDuration());
+        level().addFreshEntity(darkFountain);
     }
 
     @Override

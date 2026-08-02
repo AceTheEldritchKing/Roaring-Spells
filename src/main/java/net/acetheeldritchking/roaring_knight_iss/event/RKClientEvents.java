@@ -1,5 +1,6 @@
 package net.acetheeldritchking.roaring_knight_iss.event;
 
+import io.redspace.ironsspellbooks.registries.EntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.entity.bosses.black_executioner.BlackExecutionerRenderer;
 import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_fountain_spire.DarkFountainSpireRenderer;
@@ -9,6 +10,7 @@ import net.acetheeldritchking.roaring_knight_iss.entity.render.spells.dark_star_
 import net.acetheeldritchking.roaring_knight_iss.particles.*;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKParticleRegistry;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -26,6 +28,7 @@ public class RKClientEvents {
         event.registerEntityRenderer(RKEntityRegistry.DARK_STAR_PROJECTILE.get(), DarkStarProjectileRenderer::new);
         event.registerEntityRenderer(RKEntityRegistry.DARK_STAR_SHRAPNEL.get(), DarkStarShrapnelProjectileRenderer::new);
         event.registerEntityRenderer(RKEntityRegistry.DARK_FOUNTAIN_SPIRE.get(), DarkFountainSpireRenderer::new);
+        event.registerEntityRenderer(RKEntityRegistry.DARK_FOUNTAIN.get(), NoopRenderer::new);
     }
 
     // Item Rarity rendering
