@@ -17,13 +17,13 @@ public class RKServerConfig {
     private static final ModConfigSpec.ConfigValue<Double> SWORD_SURROUND_SPEED = BUILDER
             .comment("Defines the speed for the Roaring Knight's swords for its sword surround goal")
             .comment("Default is [5.5F]")
-            .define("Sword Surround Speed", 0.6);
+            .define("Sword Surround Speed", 0.8);
 
     // Sword Spread Speed
     private static final ModConfigSpec.ConfigValue<Double> SWORD_SPREAD_SPEED = BUILDER
             .comment("Defines the speed for the Roaring Knight's swords for its sword spread goal")
             .comment("Default is [5.5F]")
-            .define("Sword Spread Speed", 0.5);
+            .define("Sword Spread Speed", 0.7);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
