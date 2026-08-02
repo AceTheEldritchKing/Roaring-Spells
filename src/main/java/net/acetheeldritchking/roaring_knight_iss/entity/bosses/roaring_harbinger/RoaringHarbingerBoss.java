@@ -24,6 +24,7 @@ import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_projectile.DarkStarProjectileEntity;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKSoundEvents;
+import net.acetheeldritchking.roaring_knight_iss.utils.RKUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -518,6 +519,14 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
                 handleHalfHealthRoaring();
             }
         }
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        // After Image particle
+        RKUtils.spawnAfterImageParticle(-.5F, 255, 255, 255, this);
     }
 
     @Override

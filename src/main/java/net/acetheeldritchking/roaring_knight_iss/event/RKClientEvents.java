@@ -64,5 +64,6 @@ public class RKClientEvents {
         event.registerSpriteSet(RKParticleRegistry.DARK_STAR_PARTICLE.get(), DarkStarParticle.Provider::new);
         event.registerSpriteSet(RKParticleRegistry.RED_SPARKLE_PARTICLE.get(), RedSparkleParticle.Provider::new);
         event.registerSpriteSet(RKParticleRegistry.STAR_SPARKLE_PARTICLE.get(), StarSparkleParticle.Provider::new);
+        event.registerSpecial(RKParticleRegistry.AFTER_IMAGE.get(), new AfterImageParticle.Provider());
     }
 }
