@@ -59,10 +59,10 @@ public class SwordSurroundAbilityGoal extends AnimatedActionGoal<RoaringHarbinge
             int delay = Utils.random.nextIntBetweenInclusive(80, 100);
             if (mob.isTitan())
             {
-                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 7, 5.0, delay, (float) (0.9 + 0.2F), 15);
+                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 7, 8.0, delay, (float) (0.7 + 0.2F), 15);
             } else
             {
-                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 5, 5.0, delay, (float) 0.9, 10);
+                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 5, 8.0, delay, (float) 0.7, 10);
             }
         }
     }
