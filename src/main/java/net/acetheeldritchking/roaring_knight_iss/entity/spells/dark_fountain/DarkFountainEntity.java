@@ -48,7 +48,7 @@ public class DarkFountainEntity extends AoeEntity implements AntiMagicSusceptibl
 
     @Override
     public float getParticleCount() {
-        return 1 * getRadius();
+        return 1 * (getRadius()/3);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DarkFountainEntity extends AoeEntity implements AntiMagicSusceptibl
 
     @Override
     protected float getParticleSpeedModifier() {
-        return 1.4f;
+        return 1.5f;
     }
 
     @Override

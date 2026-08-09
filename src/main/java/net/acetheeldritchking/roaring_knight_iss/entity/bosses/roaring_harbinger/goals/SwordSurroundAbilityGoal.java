@@ -50,6 +50,7 @@ public class SwordSurroundAbilityGoal extends AnimatedActionGoal<RoaringHarbinge
     @Override
     protected void doAction() {
         TheRoaringSpellbooks.LOGGER.debug("GO INTO SWORD SURROUND GOAL");
+        TheRoaringSpellbooks.LOGGER.debug("Surround speed: " + RKServerConfig.swordSurroundSpeed);
 
         var target = mob.getTarget();
         if (target != null)
@@ -58,10 +59,10 @@ public class SwordSurroundAbilityGoal extends AnimatedActionGoal<RoaringHarbinge
             int delay = Utils.random.nextIntBetweenInclusive(80, 100);
             if (mob.isTitan())
             {
-                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 7, 5.0, delay, (float) (RKServerConfig.swordSurroundSpeed + 0.2F), 15);
+                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 7, 5.0, delay, (float) (0.9 + 0.2F), 15);
             } else
             {
-                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 5, 5.0, delay, (float) RKServerConfig.swordSurroundSpeed, 10);
+                DarkSabreProjectile.spawnDelayedSurroundGroup(mob.level(), mob.getTarget(), mob, 5, 5.0, delay, (float) 0.9, 10);
             }
         }
     }

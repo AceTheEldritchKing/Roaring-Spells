@@ -3,6 +3,7 @@ package net.acetheeldritchking.roaring_knight_iss.registries;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.spells.eldritch.KnightsEdgeSpell;
+import net.acetheeldritchking.roaring_knight_iss.spells.eldritch.StarStormSpell;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -21,6 +22,10 @@ public class RKSpellRegistries {
 
     // Knight's Edge - Conjure a group of shadow blades with down upon a selected area. Blades cause hit entities to take more Eldritch damage
     public static final Supplier<AbstractSpell> KNIGHTS_EDGE = registerSpell(new KnightsEdgeSpell());
+
+    // Star Storm
+    public static final Supplier<AbstractSpell> STAR_STORM = registerSpell(new StarStormSpell());
+
 
     public static void register(IEventBus eventBus)
     {

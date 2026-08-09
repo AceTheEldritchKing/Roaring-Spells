@@ -29,6 +29,7 @@ public class RKClientEvents {
         event.registerEntityRenderer(RKEntityRegistry.DARK_STAR_SHRAPNEL.get(), DarkStarShrapnelProjectileRenderer::new);
         event.registerEntityRenderer(RKEntityRegistry.DARK_FOUNTAIN_SPIRE.get(), DarkFountainSpireRenderer::new);
         event.registerEntityRenderer(RKEntityRegistry.DARK_FOUNTAIN.get(), NoopRenderer::new);
+        event.registerEntityRenderer(RKEntityRegistry.STAR_STORM_PROJECTILE.get(), NoopRenderer::new);
     }
 
     // Item Rarity rendering

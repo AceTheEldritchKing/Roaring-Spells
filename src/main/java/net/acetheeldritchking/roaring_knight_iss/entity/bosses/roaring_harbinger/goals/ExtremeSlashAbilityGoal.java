@@ -13,6 +13,8 @@ import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.acetheeldritchking.aces_spell_utils.utils.ASUtils;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
+import net.acetheeldritchking.roaring_knight_iss.particles.RedCleaveParticleOptions;
+import net.acetheeldritchking.roaring_knight_iss.particles.SwoonParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -49,8 +51,8 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
 
     @Override
     protected int getCooldown() {
-        return Utils.random.nextIntBetweenInclusive(245, 395);
-        //return Utils.random.nextIntBetweenInclusive(50, 100);
+        //return Utils.random.nextIntBetweenInclusive(245, 395);
+        return Utils.random.nextIntBetweenInclusive(50, 100); // testing
     }
 
     @Override
@@ -60,12 +62,17 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
 
     @Override
     public void tick() {
+        if (abilityTimer == 0)
+        {
+            mob.cancelCast();
+            TargetedAreaEntity visualEntity = TargetedAreaEntity.createTargetAreaEntity(mob.level(), mob.getBoundingBox().getCenter(), 5.5F, 0xc80000, mob);
+            visualEntity.setDuration(23);
+            visualEntity.setShouldFade(true);
+        }
         if (abilityTimer <= 22)
         {
             this.mob.getNavigation().stop();
             this.mob.lerpMotion(0, 0, 0);
-
-            TargetedAreaEntity.createTargetAreaEntity(mob.level(), mob.getBoundingBox().getCenter(), 5.5F, 0xc80000, mob);
 
             ASUtils.spawnParticlesInCircle(16, 5.5F, 0.8F, 0.1F, mob, ParticleHelper.ENDER_SPARKS);
         }
@@ -100,5 +107,11 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
         }
 
         CameraShakeManager.addCameraShake(new CameraShakeData(mob.level(), 20, mob.position(), radius));
+
+        Vec3 forward = mob.getForward();
+        float reach = 2 * mob.getScale();
+        Vec3 hitLoc = mob.getBoundingBox().getCenter().add(mob.getForward().multiply(reach, 0.5F, reach));
+        MagicManager.spawnParticles(mob.level(),
+                new SwoonParticleOptions((float) forward.x, (float) forward.y, (float) forward.z, false, false, mob.getScale()), hitLoc.x, hitLoc.y, hitLoc.z, 1, 0, 0, 0, 0, true);
     }
 }

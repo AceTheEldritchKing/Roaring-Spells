@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import io.redspace.ironsspellbooks.render.RenderHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -17,13 +18,20 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 //https://github.com/seymourimadeit/Piglin-Proliferation/blob/main/src/main/java/tallestred/piglinproliferation/client/particles/AfterImageParticle.java
@@ -141,21 +149,26 @@ public class AfterImageParticle extends Particle {
             boolean shouldBeGlowing = minecraft.shouldEntityAppearGlowing(livingEntity);
             ResourceLocation texture = renderRaw.getTextureLocation(livingEntity);
 
+            RenderType myDefaultType = RenderType.entityCutoutNoCull(texture);
+
+            Map<RenderType, ResourceLocation> knownCutouts = collectKnownCutoutTypes(livingEntity, texture);
+
             MultiBufferSource tintedSource = (requestedType) ->
             {
-                boolean hasTexture = requestedType.format().getElements().contains(VertexFormatElement.UV0);
-                boolean hasNormal = requestedType.format().getElements().contains(VertexFormatElement.NORMAL);
+                ResourceLocation matchedTexture = knownCutouts.get(requestedType);
+                VertexConsumer originalBuffer;
 
-                if (hasTexture && hasNormal)
+                if (matchedTexture != null)
                 {
-                    RenderType ghostType = this.getRenderType(texture, notInvis, notInvisToPlayer, shouldBeGlowing);
-                    VertexConsumer originalBuffer = multiBufferSource.getBuffer(ghostType != null ? ghostType : requestedType);
-                    return createTintedBuffer.apply(originalBuffer);
-                } else
-                {
-                    VertexConsumer originalBuffer = multiBufferSource.getBuffer(requestedType);
-                    return createTintedBuffer.apply(originalBuffer);
+                    RenderType ghostType = this.getRenderType(matchedTexture, notInvis, notInvisToPlayer, shouldBeGlowing);
+                    originalBuffer = multiBufferSource.getBuffer(ghostType != null ? ghostType : requestedType);
                 }
+                else
+                {
+                    originalBuffer = multiBufferSource.getBuffer(requestedType);
+                }
+
+                return createTintedBuffer.apply(originalBuffer);
             };
 
             dispatcher.render(livingEntity,
@@ -176,6 +189,30 @@ public class AfterImageParticle extends Particle {
         {
             return flag3 ? RenderType.outline(resourceLocation) : null;
         }
+    }
+
+    private Map<RenderType, ResourceLocation> collectKnownCutoutTypes(LivingEntity livingEntity, ResourceLocation skinTexture) {
+        Map<RenderType, ResourceLocation> known = new HashMap<>();
+        known.put(RenderType.entityCutoutNoCull(skinTexture), skinTexture);
+
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+            ItemStack stack = livingEntity.getItemBySlot(slot);
+            if (stack.isEmpty()) continue;
+
+            HumanoidModel<?> model = IClientItemExtensions.of(stack).getHumanoidArmorModel(livingEntity, stack, slot, null);
+
+            if (model instanceof GeoArmorRenderer<?> armorRenderer) {
+                try {
+                    @SuppressWarnings({"unchecked", "rawtypes"})
+                    ResourceLocation armorTexture = ((GeoArmorRenderer) armorRenderer).getTextureLocation((GeoAnimatable) stack.getItem());
+                    known.put(RenderType.armorCutoutNoCull(armorTexture), armorTexture);
+                } catch (Exception ignored) {
+                    // nada here...
+                }
+            }
+        }
+
+        return known;
     }
 
     @Override

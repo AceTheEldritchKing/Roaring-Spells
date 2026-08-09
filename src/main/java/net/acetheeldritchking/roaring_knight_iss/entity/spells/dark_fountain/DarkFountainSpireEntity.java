@@ -116,7 +116,7 @@ public class DarkFountainSpireEntity extends AoeEntity implements AntiMagicSusce
         DarkFountainEntity darkFountain = new DarkFountainEntity(this.level());
         darkFountain.setOwner(this.getOwner());
         darkFountain.setPos(Utils.moveToRelativeGroundLevel(level(), this.position(), 3));
-        darkFountain.setRadius(5);
+        darkFountain.setRadius(4);
         darkFountain.setCircular();
         darkFountain.setDamage(this.getDamage() * .5f);
         darkFountain.setDuration(20 * 15);

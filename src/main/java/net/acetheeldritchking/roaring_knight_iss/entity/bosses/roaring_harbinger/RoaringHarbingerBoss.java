@@ -24,6 +24,7 @@ import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_projectile.DarkStarProjectileEntity;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKSoundEvents;
+import net.acetheeldritchking.roaring_knight_iss.registries.RKSpellRegistries;
 import net.acetheeldritchking.roaring_knight_iss.utils.RKUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -33,6 +34,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
@@ -112,6 +115,16 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
     protected double anglePerWave = 15.0;
     private int darkStarAttackTimer = 0;
     private int darkStarWavesSpawned = 0;
+
+    protected static final int    DARK_STAR_RINGS      = 8;
+    protected static final int    DARK_STAR_PER_RING   = 9;
+    protected static final int    RING_SPAWN_INTERVAL  = 6;
+    protected static final double OUTER_RING_RADIUS    = 22.0;
+    protected static final double RING_SPACING         = 2.4;
+
+    private static final double[] HEIGHT_BANDS = { 0.55, 1.45, 2.35 };
+
+    private int darkStarRingsSpawned;
 
     // Loot
     SimpleContainer deathLoot = null;
@@ -271,11 +284,11 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
 
         this.goalSelector.addGoal(1, new FloatGoal(this));
 
-        this.goalSelector.addGoal(4, new SpellBarrageGoal(this, SpellRegistry.ELDRITCH_BLAST_SPELL.get(), 1, 3, 80, 150, 3));
         this.goalSelector.addGoal(3, new SpellBarrageGoal(this, SpellRegistry.TELEPORT_SPELL.get(), 1, 3, 80, 150, 3));
 
         this.goalSelector.addGoal(2, new SwordSurroundAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSpreadAbilityGoal(this));
+        this.goalSelector.addGoal(2, new SimpleFountainAbilityGoal(this));
         // Have this at 1 so we can keep up with the player or target
         this.goalSelector.addGoal(1, new PursuitAbilityGoal(this));
 
@@ -331,12 +344,12 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
 
         this.goalSelector.addGoal(1, new FloatGoal(this));
 
-        this.goalSelector.addGoal(2, new SpellBarrageGoal(this, SpellRegistry.ELDRITCH_BLAST_SPELL.get(), 1, 3, 80, 150, 3));
         this.goalSelector.addGoal(4, new SpellBarrageGoal(this, SpellRegistry.TELEPORT_SPELL.get(), 1, 3, 80, 150, 3));
 
         this.goalSelector.addGoal(2, new ExtremeSlashAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSurroundAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSpreadAbilityGoal(this));
+        this.goalSelector.addGoal(2, new SimpleFountainAbilityGoal(this));
         // Have this at 1 so we can keep up with the player or target
         this.goalSelector.addGoal(1, new PursuitAbilityGoal(this));
 
@@ -465,36 +478,49 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
 
         if (tick >= ROARING_STAR_SHOOT_TIMESTAMP && tick < ROARING_PULL_IN_START_TIMESTAMP)
         {
-            this.darkStarAttackTimer++;
-
-            if (this.darkStarWavesSpawned < DARK_STAR_COUNT && this.darkStarAttackTimer % DARK_STAR_INTERVAL_TICKS == 0)
-            {
-                spawnDarkStar(this.darkStarWavesSpawned);
-                this.darkStarWavesSpawned++;
+            int sinceStart = tick - ROARING_STAR_SHOOT_TIMESTAMP;
+            int expected = Mth.clamp(sinceStart / RING_SPAWN_INTERVAL + 1, 0, DARK_STAR_RINGS);
+            while (darkStarRingsSpawned < expected) {
+                spawnDarkStarRing(darkStarRingsSpawned++);
             }
 
-            if (halfHealthTimer == 0 && this.darkStarWavesSpawned >= DARK_STAR_COUNT)
+            if (halfHealthTimer == 0)
             {
                 stopHalfHealthRoaring();
             }
         }
     }
 
-    private void spawnDarkStar(int wave)
-    {
-        double baseAngle = Math.toRadians(wave * anglePerWave);
+    private void spawnDarkStarRing(int ring) {
+        Vec3 origin = this.position();
 
-        for (int i = 0; i < DARK_STAR_PER_WAVE; i++)
-        {
-            double angle = baseAngle * i * (2 * Math.PI / DARK_STAR_PER_WAVE);
+        double spin = (ring % 2 == 0) ? 1.0 : -1.0;
+        double angularSpeed = Math.toRadians(4.5 + (ring % 3) * 1.1) * spin;
 
-            DarkStarProjectileEntity darkStar = new DarkStarProjectileEntity(this.level(), angle, ROARING_STAR_SHOOT_TIMESTAMP, ROARING_PULL_IN_START_TIMESTAMP, this);
-            darkStar.setOwner(this);
-            darkStar.setPos(this.getX(), this.getEyeY(), this.getZ());
-            darkStar.setDamage(25F);
-            darkStar.setExplosionRadius(15.0F);
+        double radius = OUTER_RING_RADIUS - ring * RING_SPACING;
 
-            this.level().addFreshEntity(darkStar);
+        double baseAngle = Math.toRadians(ring * 137.5);
+
+        int spawnTick   = ROARING_STAR_SHOOT_TIMESTAMP + ring * RING_SPAWN_INTERVAL;
+        int expandTicks = 26;
+        int pullTicks   = 42;
+        int holdTicks   = Math.max(20, (ROARING_PULL_IN_START_TIMESTAMP - spawnTick) - expandTicks);
+
+        for (int i = 0; i < DARK_STAR_PER_RING; i++) {
+            double angle  = baseAngle + i * (Math.PI * 2.0 / DARK_STAR_PER_RING);
+            double height = HEIGHT_BANDS[(i + ring) % HEIGHT_BANDS.length];
+            double phase  = i * (Math.PI * 2.0 / DARK_STAR_PER_RING) + ring * 0.7;
+
+            var star = new DarkStarProjectileEntity(level(), this, DarkStarProjectileEntity.AttackMode.HALF_HEALTH)
+                    .configure(origin, angle, angularSpeed, radius, height,
+                            expandTicks, holdTicks, pullTicks)
+                    .withWave(0.55, Math.toRadians(4.5), phase,
+                            1.6,  Math.toRadians(11.0), Math.toRadians(3.2))
+                    .fragmentsOnImplode(i % 3 == 0);
+
+            star.setDamage(25.0F);
+            star.setExplosionRadius(3.5F);
+            level().addFreshEntity(star);
         }
     }
 
@@ -592,10 +618,13 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
         {
             amount *= 0.50f;
         }
+        // Cancel damage if roaring
         if (isRoaring())
         {
-            // I don't want people nuking the boss while it's charging up
-            amount *= 0.80f;
+            if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
+            {
+                return false;
+            }
         }
         // damage limiter - yoinked from Tyros
         var limit = getMaxHealth() * 0.025f;
@@ -711,6 +740,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
         // Half health roaring
         pCompound.putInt("halfHealthTimer", halfHealthTimer);
         pCompound.putBoolean("halfHealthAttack", hasPerformedHalfHealthRoar);
+        pCompound.putInt("darkStarRing", darkStarRingsSpawned);
     }
 
     @Override
@@ -741,6 +771,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
         // Roaring
         this.halfHealthTimer = pCompound.getInt("halfHealthTimer");
         this.hasPerformedHalfHealthRoar = pCompound.getBoolean("halfHealthAttack");
+        this.darkStarRingsSpawned = pCompound.getInt("darkStarRing");
 
         // Titan
         setTitan(pCompound.getBoolean("titan"));

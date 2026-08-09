@@ -56,6 +56,7 @@ public class SwordSpreadAbilityGoal extends AnimatedActionGoal<RoaringHarbingerB
     @Override
     protected void doAction() {
         TheRoaringSpellbooks.LOGGER.debug("GO INTO SWORD SPREAD GOAL");
+        TheRoaringSpellbooks.LOGGER.debug("Spread speed: " + RKServerConfig.swordSpreadSpeed);
 
         var target = mob.getTarget();
         if (target != null)
@@ -64,10 +65,10 @@ public class SwordSpreadAbilityGoal extends AnimatedActionGoal<RoaringHarbingerB
             int delay = Utils.random.nextIntBetweenInclusive(65, 85);
             if (mob.isTitan())
             {
-                DarkSabreProjectile.spawnDelayedSpreadGroup(mob.level(), mob.getTarget(), mob, 15, 4.0, delay, (float) (RKServerConfig.swordSurroundSpeed + 0.2F), 8);
+                DarkSabreProjectile.spawnDelayedSpreadGroup(mob.level(), mob.getTarget(), mob, 15, 4.0, delay, (float) (0.8 + 0.2F), 8);
             } else
             {
-                DarkSabreProjectile.spawnDelayedSpreadGroup(mob.level(), mob.getTarget(), mob, 10, 4.0, delay, (float) RKServerConfig.swordSpreadSpeed, 5);
+                DarkSabreProjectile.spawnDelayedSpreadGroup(mob.level(), mob.getTarget(), mob, 10, 4.0, delay, (float) 0.8, 5);
             }
         }
     }

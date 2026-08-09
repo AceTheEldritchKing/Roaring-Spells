@@ -1,7 +1,6 @@
 package net.acetheeldritchking.roaring_knight_iss.registries;
 
 import io.redspace.ironsspellbooks.IronsSpellbooks;
-import io.redspace.ironsspellbooks.entity.spells.magma_ball.FireField;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_fountain.DarkFountainEntity;
@@ -9,6 +8,7 @@ import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_fountain.Dar
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.dark_sabre_projectile.DarkSabreProjectile;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_projectile.DarkStarProjectileEntity;
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_shrapnel.DarkStarShrapnelProjectileEntity;
+import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_storm.StarStormProjectile;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -69,6 +69,13 @@ public class RKEntityRegistry {
                     .sized(1.5f, 14f)
                     .clientTrackingRange(64)
                     .build(ResourceLocation.fromNamespaceAndPath(TheRoaringSpellbooks.MOD_ID, "dark_fountian_spire").toString()));
+
+    // Star Storm
+    public static final DeferredHolder<EntityType<?>, EntityType<StarStormProjectile>> STAR_STORM_PROJECTILE =
+            ENTITIES.register("star_storm_spell", () -> EntityType.Builder.<StarStormProjectile>of(StarStormProjectile::new, MobCategory.MISC)
+                    .sized(1f, 1f)
+                    .clientTrackingRange(64)
+                    .build(ResourceLocation.fromNamespaceAndPath(IronsSpellbooks.MODID, "star_storm_spell").toString()));
 
     public static void register(IEventBus eventBus)
     {

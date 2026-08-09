@@ -4,21 +4,46 @@
 		{
 			"description": {
 				"identifier": "geometry.unknown",
-				"texture_width": 96,
-				"texture_height": 96,
-				"visible_bounds_width": 5,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 4,
+				"visible_bounds_offset": [0, 1, 0]
 			},
 			"bones": [
 				{
-					"name": "sword",
-					"pivot": [-0.5, 6, 12],
-					"rotation": [-90, 0, -90],
+					"name": "base",
+					"pivot": [0, 4, 8],
+					"rotation": [90, 0, 0]
+				},
+				{
+					"name": "hilt",
+					"parent": "base",
+					"pivot": [0, 4, 8],
 					"cubes": [
-						{"origin": [-1.5, 5.83333, 10.83333], "size": [2, 13, 2], "uv": [9, 0]},
-						{"origin": [-3.5, 4.83333, 10.83333], "size": [4, 1, 2], "uv": [7, 15]},
-						{"origin": [-6.5, -39.16667, 11.83333], "size": [13, 45, 0], "uv": [0, 18]}
+						{"origin": [-1, 0, 7], "size": [2, 11, 2], "uv": [0, 0]},
+						{"origin": [-1, -2.75, 7], "size": [2, 2, 2], "pivot": [0, -1.75, 8], "rotation": [-45, 0, 0], "uv": [0, 13]},
+						{"origin": [-1, -1.5, 5], "size": [2, 2, 6], "inflate": 0.01, "uv": [8, 0]}
+					]
+				},
+				{
+					"name": "guard",
+					"parent": "base",
+					"pivot": [0, 4, 8],
+					"cubes": [
+						{"origin": [-1, 9, 3.5], "size": [2, 2, 4], "inflate": 0.01, "pivot": [0, 11, 7.5], "rotation": [20, 0, 0], "uv": [36, 2]},
+						{"origin": [-1, 9, 8.5], "size": [2, 2, 4], "inflate": 0.01, "pivot": [0, 11, 8.5], "rotation": [-20, 0, 0], "uv": [24, 2]},
+						{"origin": [0, 7, 0.5], "size": [0, 14, 7], "inflate": 0.01, "pivot": [0, 11, 7.5], "rotation": [20, 0, 0], "uv": [22, 1]},
+						{"origin": [0, 7, 8.5], "size": [0, 14, 7], "inflate": 0.01, "pivot": [0, 11, 8.5], "rotation": [-20, 0, 0], "uv": [36, 1]}
+					]
+				},
+				{
+					"name": "blade",
+					"parent": "base",
+					"pivot": [0, 4, 8],
+					"cubes": [
+						{"origin": [-1, 10.25, 6], "size": [2, 3, 3], "inflate": 0.02, "pivot": [0, 11.25, 8], "rotation": [-45, 0, 0], "uv": [54, 1]},
+						{"origin": [0, 9.25, -15], "size": [0, 25, 25], "inflate": 0.02, "pivot": [-1, 11.25, 8], "rotation": [-45, 0, 0], "uv": [0, 14]}
 					]
 				}
 			]

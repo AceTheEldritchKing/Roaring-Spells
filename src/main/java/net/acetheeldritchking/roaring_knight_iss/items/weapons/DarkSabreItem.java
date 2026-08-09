@@ -81,7 +81,7 @@ public class DarkSabreItem extends ActiveAndPassiveAbilityMagicSwordItem {
             livingEntity.level().playLocalSound(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundRegistry.FLAMING_STRIKE_SWING.get(), SoundSource.PLAYERS, 1, 1, false);
 
             // Fountain
-            DarkFountainSpireEntity darkFountainSpire = new DarkFountainSpireEntity(level, true);
+            DarkFountainSpireEntity darkFountainSpire = new DarkFountainSpireEntity(level, false);
             darkFountainSpire.setOwner(player);
             darkFountainSpire.moveTo(spawn);
             darkFountainSpire.setDamage(10F);
