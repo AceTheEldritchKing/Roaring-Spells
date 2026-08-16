@@ -28,8 +28,9 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.util.*;
 
-// Kinda taken from BielGG Spells
-// I'm so sorry I have up trying to make my particle work, I have to do your render layer method </3
+// Renderer from BielGG
+// Credit goes to him, thank you again man for allowing me to use this
+// https://www.curseforge.com/minecraft/mc-mods/bielggs-spells-addon
 public class GeoArmorAfterEffectLayer<T extends GeoAnimatable> extends GeoRenderLayer<T> {
     private static final Map<UUID, TrailState> TRAILS = new HashMap<>();
     private static final ResourceLocation ARMOR_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheRoaringSpellbooks.MOD_ID, "textures/models/armor/roaring_harbinger_armor.png");

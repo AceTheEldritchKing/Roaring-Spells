@@ -260,8 +260,8 @@ public class DarkStarProjectileEntity extends AbstractMagicProjectile implements
         if (level() instanceof ServerLevel sl) {
             sl.sendParticles(ParticleTypes.EXPLOSION, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
         }
-        level().playSound(null, blockPosition(), SoundRegistry.ARCANE_IMPACT.get(),
-                SoundSource.HOSTILE, 0.6F, 1F);
+        //level().playSound(null, blockPosition(), SoundRegistry.ARCANE_IMPACT.get(),
+                //SoundSource.HOSTILE, 0.6F, 1F);
 
         if (fragmentsOnImplode) {
             double baseAngle = this.random.nextDouble() * Math.PI * 2;

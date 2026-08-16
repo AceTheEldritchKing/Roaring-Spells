@@ -221,6 +221,10 @@ dependencies {
     implementation "curse.maven:aces-spell-utils-1299492:8466924"
     //implementation("net.acetheeldritchking.aces_spell_utils:aces_spell_utils:1.2.7.0-1.21.1")
 
+    // Cascade
+    implementation "curse.maven:cascade-1602337:8392987"
+    //implementation("dev.chocoboy.cascade:cascade-neoforge:1.0.0+1.21.1")
+
     //QOL
     //todo: 1.21: update these mods
 //    localRuntime "curse.maven:tslatentitystatus-tes-830420:4746241"
