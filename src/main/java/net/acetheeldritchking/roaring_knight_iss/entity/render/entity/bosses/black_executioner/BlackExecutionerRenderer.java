@@ -9,10 +9,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class BlackExecutionerRenderer extends GeoEntityRenderer<RoaringHarbingerBoss> {
     public BlackExecutionerRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new RoaringHarbingerModel());
+        addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
 
     @Override
