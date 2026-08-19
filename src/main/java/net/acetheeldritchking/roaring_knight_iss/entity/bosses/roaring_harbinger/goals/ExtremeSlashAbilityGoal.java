@@ -13,6 +13,7 @@ import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.acetheeldritchking.aces_spell_utils.utils.ASUtils;
 import net.acetheeldritchking.roaring_knight_iss.TheRoaringSpellbooks;
 import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger.RoaringHarbingerBoss;
+import net.acetheeldritchking.roaring_knight_iss.particles.RKParticleHelper;
 import net.acetheeldritchking.roaring_knight_iss.particles.RedCleaveParticleOptions;
 import net.acetheeldritchking.roaring_knight_iss.particles.SwoonParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -74,7 +75,7 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
             this.mob.getNavigation().stop();
             this.mob.lerpMotion(0, 0, 0);
 
-            ASUtils.spawnParticlesInCircle(16, 5.5F, 0.8F, 0.1F, mob, ParticleHelper.ENDER_SPARKS);
+            ASUtils.spawnParticlesInCircle(16, 5.5F, 0.8F, 0.1F, mob, RKParticleHelper.RED_SPARKLE);
         }
 
         if (abilityTimer > 20 && abilityTimer <= 22)
@@ -89,7 +90,7 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
     protected void doAction() {
         TheRoaringSpellbooks.LOGGER.debug("GO INTO EXTREME SLASH GOAL");
 
-        float radius = 10.25f;
+        float radius = 5.5f;
 
         mob.playSound(SoundRegistry.DIVINE_SMITE_CAST.get(), 2.5f, Utils.random.nextIntBetweenInclusive(80, 110) * .01f);
 
@@ -101,7 +102,7 @@ public class ExtremeSlashAbilityGoal extends AnimatedActionGoal<RoaringHarbinger
             if (targets != mob)
             {
                 if (DamageSources.applyDamage(targets, 125, damageSource)) {
-                    MagicManager.spawnParticles(mob.level(), ParticleHelper.FIERY_SMOKE, targets.getX(), targets.getY() + targets.getBbHeight() * .5f, targets.getZ(), 30, targets.getBbWidth() * .5f, targets.getBbHeight() * .5f, targets.getBbWidth() * .5f, .03, false);
+                    MagicManager.spawnParticles(mob.level(), RKParticleHelper.RED_SPARKLE, targets.getX(), targets.getY() + targets.getBbHeight() * .5f, targets.getZ(), 30, targets.getBbWidth() * .5f, targets.getBbHeight() * .5f, targets.getBbWidth() * .5f, .03, false);
                 }
             }
         }

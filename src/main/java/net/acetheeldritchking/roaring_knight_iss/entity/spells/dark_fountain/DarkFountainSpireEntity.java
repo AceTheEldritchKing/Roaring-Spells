@@ -48,6 +48,12 @@ public class DarkFountainSpireEntity extends AoeEntity implements AntiMagicSusce
         this.isFullFountain = isFullFountain;
     }
 
+    public DarkFountainSpireEntity(Level level, double x, double y, double z, boolean isFullFountain) {
+        this(RKEntityRegistry.DARK_FOUNTAIN_SPIRE.get(), level);
+        this.isFullFountain = isFullFountain;
+        this.setPos(x, y, z);
+    }
+
     @Override
     public void onAntiMagic(MagicData playerMagicData) {
         // Put smth interesting here when counterspelled?
@@ -62,6 +68,8 @@ public class DarkFountainSpireEntity extends AoeEntity implements AntiMagicSusce
 
     @Override
     public void applyEffect(LivingEntity target) {
+        // Fuck you and your iframes
+        target.invulnerableTime = 0;
         DamageSources.applyDamage(target, getDamage(), SpellRegistry.SUNBEAM_SPELL.get().getDamageSource(this, getOwner()));
     }
 

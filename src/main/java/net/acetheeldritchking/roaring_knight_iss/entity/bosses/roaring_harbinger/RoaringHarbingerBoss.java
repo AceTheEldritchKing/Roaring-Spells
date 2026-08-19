@@ -1,6 +1,5 @@
 package net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger;
 
-import io.redspace.ironsspellbooks.IronsSpellbooks;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.util.BossbarManager;
@@ -9,11 +8,11 @@ import io.redspace.ironsspellbooks.entity.mobs.goals.MomentHurtByTargetGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.SpellBarrageGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackAnimationData;
+import io.redspace.ironsspellbooks.entity.mobs.keeper.KeeperEntity;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.ExtendedServerBossEvent;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.FireBossEntity;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.NotIdioticNavigation;
 import io.redspace.ironsspellbooks.network.EntityEventPacket;
-import net.acetheeldritchking.aces_spell_utils.entity.mobs.GenericBossEntity;
 import net.acetheeldritchking.aces_spell_utils.entity.mobs.GenericUniqueBossEntity;
 import net.acetheeldritchking.aces_spell_utils.entity.mobs.goals.WizardSpellComboGoal;
 import net.acetheeldritchking.aces_spell_utils.registries.ASAttributeRegistry;
@@ -24,7 +23,6 @@ import net.acetheeldritchking.roaring_knight_iss.entity.bosses.roaring_harbinger
 import net.acetheeldritchking.roaring_knight_iss.entity.spells.star_projectile.DarkStarProjectileEntity;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKEntityRegistry;
 import net.acetheeldritchking.roaring_knight_iss.registries.RKSoundEvents;
-import net.acetheeldritchking.roaring_knight_iss.registries.RKSpellRegistries;
 import net.acetheeldritchking.roaring_knight_iss.utils.RKUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -32,6 +30,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
@@ -109,6 +108,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
     protected static final int ROARING_ANIM_DURATION = 269;
     protected static final int ROARING_STAR_SHOOT_TIMESTAMP = 20;
     protected static final int ROARING_PULL_IN_START_TIMESTAMP = 216;
+    protected static final int ROARING_START_TIMESTAMP = 1;
     protected static final int DARK_STAR_COUNT = 10;
     protected static final int DARK_STAR_INTERVAL_TICKS = 5;
     protected static final int DARK_STAR_PER_WAVE = 10;
@@ -272,6 +272,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, FireBossEntity.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, DeadKingBoss.class, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, KeeperEntity.class, true));
     }
 
     public RoaringHarbingerAttackGoal attackGoal = new RoaringHarbingerAttackGoal(this, 1.5F, 25, 40);
@@ -298,7 +299,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
                         new AttackAnimationData(51, "slash_2", 26)
                 ))
                 .setComboChance(0.8F)
-                .setMeleeAttackInverval(45, 55)
+                .setMeleeAttackInverval(35, 45)
                 .setMeleeMovespeedModifier(1.5F)
                 .setMeleeBias(0.75f, 1.0f)
                 .setSpells(
@@ -349,7 +350,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
         this.goalSelector.addGoal(2, new ExtremeSlashAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSurroundAbilityGoal(this));
         this.goalSelector.addGoal(2, new SwordSpreadAbilityGoal(this));
-        this.goalSelector.addGoal(2, new SimpleFountainAbilityGoal(this));
+        this.goalSelector.addGoal(2, new SpiralFountainAbilityGoal(this));
         // Have this at 1 so we can keep up with the player or target
         this.goalSelector.addGoal(1, new PursuitAbilityGoal(this));
 
@@ -380,7 +381,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
                                 ).build()
                 ))
                 .setComboChance(1.0F)
-                .setMeleeAttackInverval(35, 45)
+                .setMeleeAttackInverval(15, 35)
                 .setMeleeMovespeedModifier(1.75F)
                 .setMeleeBias(0.75f, 1.0f)
                 .setSpells(
@@ -458,6 +459,15 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
         lookControl.tick();
 
         int tick = ROARING_ANIM_DURATION - halfHealthTimer;
+
+        // To ensure we're not playing the same effect over and over
+        if (tick == ROARING_START_TIMESTAMP)
+        {
+            if (level() instanceof ServerLevel serverLevel)
+            {
+                RKUtils.gravityStar(serverLevel, this.position());
+            }
+        }
 
         // Start shooting out shit
         if (tick == ROARING_STAR_SHOOT_TIMESTAMP)
@@ -704,7 +714,7 @@ public class RoaringHarbingerBoss extends GenericUniqueBossEntity implements IEn
                 .add(AttributeRegistry.MAX_MANA, 1000)
                 .add(ASAttributeRegistry.SPELL_RES_PENETRATION, 0.25)
                 .add(ASAttributeRegistry.MANA_REND, 0.25)
-                .add(Attributes.GRAVITY, 0.015)
+                //.add(Attributes.GRAVITY, 0.015)
                 .add(Attributes.STEP_HEIGHT, 1.5)
                 ;
     }
