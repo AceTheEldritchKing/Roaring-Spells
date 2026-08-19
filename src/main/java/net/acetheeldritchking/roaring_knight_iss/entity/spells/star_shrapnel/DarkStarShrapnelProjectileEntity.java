@@ -82,30 +82,11 @@ public class DarkStarShrapnelProjectileEntity extends AbstractMagicProjectile im
     }
 
     @Override
-    protected void onHit(@NotNull HitResult hitresult) {
-        if (!this.level().isClientSide)
-        {
-            float explosionRadius = getExplosionRadius();
-            var explosionRadiusSqr = explosionRadius * explosionRadius;
-            var entities = level().getEntities(this, this.getBoundingBox().inflate(explosionRadius));
-            Vec3 losPoint = Utils.raycastForBlock(level(), this.position(), this.position().add(0, 2, 0), ClipContext.Fluid.NONE).getLocation();
-            for (Entity entity : entities) {
-                double distanceSqr = entity.distanceToSqr(hitresult.getLocation());
-                if (distanceSqr < explosionRadiusSqr && canHitEntity(entity) && Utils.hasLineOfSight(level(), losPoint, entity.getBoundingBox().getCenter(), true)) {
-                    double p = (1 - distanceSqr / explosionRadiusSqr);
-                    float damage = (float) (this.damage * p);
-                    var damageSource = new DamageSource(DamageSources.getHolderFromResource(entity, DamageTypes.MAGIC), this, getOwner());
-                    DamageSources.applyDamage(entity, damage, damageSource);
-                }
-            }
-            this.discardHelper(hitresult);
-        }
-    }
-
-    @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
-        onHit(pResult);
-        super.onHitEntity(pResult);
+        var target = pResult.getEntity();
+        var damageSource = new DamageSource(DamageSources.getHolderFromResource(target, DamageTypes.MAGIC), this, getOwner());
+        DamageSources.applyDamage(target, damage, damageSource);
+        discard();
     }
 
     @Override
