@@ -23,8 +23,13 @@ public class RKSpellRegistries {
     // Knight's Edge - Conjure a group of shadow blades with down upon a selected area. Blades cause hit entities to take more Eldritch damage
     public static final Supplier<AbstractSpell> KNIGHTS_EDGE = registerSpell(new KnightsEdgeSpell());
 
-    // Star Storm
-    public static final Supplier<AbstractSpell> STAR_STORM = registerSpell(new StarStormSpell());
+    // Star Storm ?
+
+    // Star Shrapnel
+
+    // Cutscene Merchant
+
+    // Swoon
 
 
     public static void register(IEventBus eventBus)
